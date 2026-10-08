@@ -46,6 +46,31 @@ app = Flask(
 app.config["JSON_SORT_KEYS"] = False
 
 
+class VercelPathFixMiddleware:
+    """
+    WSGI Middleware for Vercel Serverless environment.
+    When Vercel uses rewrite rules (e.g. /(.*) -> /api/index), Vercel passes
+    the original requested URL path in HTTP_X_MATCHED_PATH.
+    This middleware restores the original path in PATH_INFO so Flask's routing
+    works seamlessly for /, /api/diary, /api/tasks, etc.
+    """
+    def __init__(self, wsgi_app):
+        self.wsgi_app = wsgi_app
+
+    def __call__(self, environ, start_response):
+        matched_path = environ.get("HTTP_X_MATCHED_PATH") or environ.get("HTTP_X_VERCEL_MATCHED_PATH")
+        if matched_path:
+            # Strip query string if present
+            if "?" in matched_path:
+                matched_path = matched_path.split("?", 1)[0]
+            environ["PATH_INFO"] = matched_path
+        return self.wsgi_app(environ, start_response)
+
+
+# Wrap Flask with Vercel path fix middleware
+app.wsgi_app = VercelPathFixMiddleware(app.wsgi_app)
+
+
 # =============================================================================
 # DATA STRUCTURE: STACK (LIFO - Last In, First Out)
 # =============================================================================
@@ -231,6 +256,9 @@ def ensure_initialized():
 # =============================================================================
 
 @app.route("/", methods=["GET"])
+@app.route("/api", methods=["GET"])
+@app.route("/api/index", methods=["GET"])
+@app.route("/api/index.py", methods=["GET"])
 def index():
     """Serves the main Smart Diary HTML user interface."""
     ensure_initialized()
@@ -521,6 +549,9 @@ def bad_request(error):
 
 @app.errorhandler(404)
 def not_found(error):
+    # If the rewritten path is /api/index, /api/index.py, or /api, render the page
+    if request.path in ("/api/index", "/api/index.py", "/api", "/api/"):
+        return render_template("index.html")
     if request.path.startswith("/api/"):
         return jsonify({
             "success": False,
