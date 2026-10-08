@@ -1,0 +1,4 @@
+id,text,done,created_at
+1,Write today's diary entry,false,2026-10-08 10:00:00
+2,Try the Undo and Redo buttons,false,2026-10-08 10:05:00
+3,Switch to the dark theme,true,2026-10-08 10:10:00

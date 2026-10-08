@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Smart Diary - A modern web diary with Stack-based undo/redo, to-do list, and local persistence.">
+  <title>Smart Diary</title>
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%94%3C/text%3E%3C/svg%3E">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- ===================================================================
+         1. HEADER (Title, Brand & Live Clock)
+         =================================================================== -->
+    <header class="card app-header">
+      <div class="brand-group">
+        <div class="brand-icon" aria-hidden="true">📔</div>
+        <div class="brand-text">
+          <h1 class="brand-title">Smart Diary</h1>
+          <p class="brand-subtitle">Your Private Digital Journal &amp; Planner</p>
+        </div>
+      </div>
+
+      <div class="clock-display" aria-label="Current date and time">
+        <div id="clockDate" class="clock-date">Thursday, October 8, 2026</div>
+        <div id="clockTime" class="clock-time">12:00:00 PM</div>
+      </div>
+    </header>
+
+    <!-- ===================================================================
+         2. TOOLBAR (File, History, Search, Theme, Font Controls)
+         =================================================================== -->
+    <nav class="card toolbar" aria-label="Diary Toolbar">
+      <!-- File Operations -->
+      <button id="newBtn" class="btn tool-btn" type="button" title="Start a fresh diary page">
+        <span class="btn-icon">＋</span> New
+      </button>
+      <button id="openBtn" class="btn tool-btn" type="button" title="Open a local .txt file into the diary">
+        <span class="btn-icon">📂</span> Open
+      </button>
+      <button id="saveBtn" class="btn tool-btn primary" type="button" title="Save diary as smart_diary.txt (Ctrl+S)">
+        <span class="btn-icon">💾</span> Save
+      </button>
+
+      <span class="divider" aria-hidden="true"></span>
+
+      <!-- History / Stack Operations -->
+      <button id="undoBtn" class="btn tool-btn" type="button" title="Undo using Stack (Ctrl+Z)" disabled>
+        <span class="btn-icon">↶</span> Undo
+      </button>
+      <button id="redoBtn" class="btn tool-btn" type="button" title="Redo using Stack (Ctrl+Y)" disabled>
+        <span class="btn-icon">↷</span> Redo
+      </button>
+
+      <span class="divider" aria-hidden="true"></span>
+
+      <!-- Find & Theme -->
+      <button id="findBtn" class="btn tool-btn" type="button" title="Find text in diary (Ctrl+F)" aria-pressed="false">
+        <span class="btn-icon">🔎</span> Find
+      </button>
+      <button id="themeBtn" class="btn tool-btn" type="button" title="Toggle Light / Dark Theme">
+        <span id="themeIcon" class="btn-icon">🌙</span> <span id="themeLabel">Theme</span>
+      </button>
+      <button id="clearBtn" class="btn tool-btn" type="button" title="Clear page (can be undone)">
+        <span class="btn-icon">🧹</span> Clear
+      </button>
+
+      <span class="divider" aria-hidden="true"></span>
+
+      <!-- Font Size Adjustment (8px - 30px) -->
+      <div class="font-control-group" role="group" aria-label="Font size controls">
+        <button id="fontDown" class="btn tool-btn icon-only" type="button" title="Decrease font size" aria-label="Decrease font size">
+          A−
+        </button>
+        <span id="fontLabel" class="font-label" aria-live="polite">18px</span>
+        <button id="fontUp" class="btn tool-btn icon-only" type="button" title="Increase font size" aria-label="Increase font size">
+          A+
+        </button>
+      </div>
+
+      <!-- Hidden file input for Open action -->
+      <input id="openFileInput" type="file" accept=".txt,text/plain" hidden>
+    </nav>
+
+    <!-- ===================================================================
+         FIND TOOLBAR (Slides down when Find is active)
+         =================================================================== -->
+    <div id="findBar" class="card find-bar" hidden>
+      <div class="find-input-wrap">
+        <span class="find-icon" aria-hidden="true">🔎</span>
+        <input id="findInput" type="text" placeholder="Find word or phrase in diary…" autocomplete="off" spellcheck="false">
+      </div>
+      <span id="findCount" class="find-count" aria-live="polite"></span>
+      <button id="findPrev" class="btn small-btn" type="button" title="Previous match (Shift+Enter)">▲ Prev</button>
+      <button id="findNext" class="btn small-btn" type="button" title="Next match (Enter)">▼ Next</button>
+      <button id="findClose" class="btn small-btn close-btn" type="button" title="Close find bar (Esc)">✕</button>
+    </div>
+
+    <!-- ===================================================================
+         3. MAIN AREA (Diary Text Editor & To-Do List)
+         =================================================================== -->
+    <main class="main-layout">
+
+      <!-- LEFT SECTION: DIARY EDITOR -->
+      <section class="card editor-section" aria-labelledby="diaryHeading">
+        <div class="editor-header">
+          <h2 id="diaryHeading" class="dear-diary-heading">Dear Diary,</h2>
+          <div class="editor-status-badges">
+            <span id="syncBadge" class="badge synced" title="All edits saved">✓ Synced</span>
+          </div>
+        </div>
+
+        <div class="notebook-container">
+          <!-- Backdrop mirror layer for smooth search highlighting -->
+          <div id="editorBackdrop" class="layer backdrop-layer" aria-hidden="true"></div>
+          <!-- Real user-editable textarea -->
+          <textarea id="diaryEditor"
+                    class="layer textarea-layer"
+                    spellcheck="true"
+                    placeholder="Write your thoughts here today..."
+                    aria-label="Diary content editor"></textarea>
+        </div>
+      </section>
+
+      <!-- RIGHT SECTION: TO-DO LIST -->
+      <aside class="card todo-section" aria-labelledby="todoHeading">
+        <div class="todo-header">
+          <h2 id="todoHeading" class="todo-title">☑ My To-Do List</h2>
+        </div>
+
+        <!-- Add Task Form -->
+        <form id="taskForm" class="task-form" autocomplete="off">
+          <input id="taskInput"
+                 type="text"
+                 maxlength="250"
+                 placeholder="What needs to be done?"
+                 aria-label="New task input">
+          <button id="addTaskBtn" class="btn primary" type="submit">Add Task</button>
+        </form>
+
+        <!-- Task List Items -->
+        <div class="task-list-wrapper">
+          <ul id="taskList" class="task-list" role="listbox" aria-label="Task items"></ul>
+          <p id="taskEmptyMsg" class="empty-state-msg">No tasks yet. Write a task above to get started!</p>
+        </div>
+
+        <!-- Task Action Buttons -->
+        <div class="todo-actions">
+          <button id="completeTaskBtn" class="btn" type="button" disabled>
+            ✔ Complete Selected
+          </button>
+          <button id="deleteTaskBtn" class="btn danger" type="button" disabled>
+            🗑 Delete Selected
+          </button>
+        </div>
+
+        <div class="todo-instructions">
+          <p class="help-text">Click any task to select it. Then click Complete or Delete.</p>
+        </div>
+      </aside>
+
+    </main>
+
+    <!-- ===================================================================
+         4. FOOTER (Statistics & Data Structure Monitor)
+         =================================================================== -->
+    <footer class="card app-footer" aria-label="Diary statistics and stack status">
+      <div class="stat-card">
+        <span class="stat-title">Words</span>
+        <span id="statWords" class="stat-number">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-title">Characters</span>
+        <span id="statChars" class="stat-number">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-title">Lines</span>
+        <span id="statLines" class="stat-number">0</span>
+      </div>
+      <div class="stat-card highlight-stack">
+        <span class="stat-title">Undo Stack</span>
+        <span id="statUndo" class="stat-number">0</span>
+      </div>
+      <div class="stat-card highlight-stack">
+        <span class="stat-title">Redo Stack</span>
+        <span id="statRedo" class="stat-number">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-title">Tasks</span>
+        <span id="statTasks" class="stat-number">0</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Toast Notification Overlay -->
+  <div id="toastMessage" class="toast-popup" role="status" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

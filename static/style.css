@@ -1,0 +1,770 @@
+/* ==========================================================================
+   Smart Diary - Modern Web Stylesheet
+   Themes: Light (Warm Cream & Soft Rose) | Dark (Charcoal & Muted Rose)
+   ========================================================================== */
+
+:root {
+  /* --- LIGHT THEME (Default) --- */
+  --bg-primary: #f6f1e8;
+  --bg-gradient: linear-gradient(145deg, #faf7f2 0%, #eee6d8 100%);
+  --card-bg: #ffffff;
+  --paper-bg: #fffdf9;
+  --text-main: #2e261f;
+  --text-muted: #807365;
+  --border-color: #e5dac9;
+  --rule-color: #ecdfce;
+  --margin-line: #e38985;
+  --accent: #c45b72;
+  --accent-hover: #ad4d62;
+  --accent-soft: #faebee;
+  --accent-contrast: #ffffff;
+  --danger: #b3392b;
+  --danger-hover: #9c2e21;
+  --done-color: #558548;
+  --highlight-match: #ffe08a;
+  --highlight-current: #ffad42;
+  --card-shadow: 0 4px 18px rgba(70, 50, 30, 0.06), 0 1px 3px rgba(70, 50, 30, 0.04);
+  --btn-shadow: 0 2px 6px rgba(80, 50, 30, 0.06);
+
+  /* Diary typography & ruling */
+  --fs: 18px;
+  --lh: calc(var(--fs) * 1.85);
+  --diary-font: "Georgia", "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+  --ui-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  /* --- DARK THEME --- */
+  --bg-primary: #181716;
+  --bg-gradient: linear-gradient(145deg, #1d1b19 0%, #121110 100%);
+  --card-bg: #23211f;
+  --paper-bg: #1c1a18;
+  --text-main: #ede5da;
+  --text-muted: #a49787;
+  --border-color: #3b352e;
+  --rule-color: #2c2722;
+  --margin-line: #8d434c;
+  --accent: #db7d91;
+  --accent-hover: #e692a4;
+  --accent-soft: #382126;
+  --accent-contrast: #181615;
+  --danger: #e26759;
+  --danger-hover: #ee7b6e;
+  --done-color: #82ba75;
+  --highlight-match: #6d541c;
+  --highlight-current: #b36e1c;
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --btn-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+  color-scheme: dark;
+}
+
+/* Box sizing reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  background-image: var(--bg-gradient);
+  color: var(--text-main);
+  font-family: var(--ui-font);
+  line-height: 1.5;
+  transition: background 0.25s ease, color 0.25s ease;
+  padding: 16px 14px 32px;
+}
+
+/* Container */
+.app-container {
+  max-width: 1220px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Base Card */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* ==========================================================================
+   1. HEADER
+   ========================================================================== */
+.app-header {
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-icon {
+  font-size: 2.2rem;
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+}
+
+.brand-title {
+  margin: 0;
+  font-family: var(--diary-font);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: var(--text-main);
+}
+
+.brand-subtitle {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.clock-display {
+  text-align: right;
+}
+
+.clock-date {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.clock-time {
+  font-family: var(--diary-font);
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+/* ==========================================================================
+   2. BUTTONS & CONTROLS
+   ========================================================================== */
+.btn {
+  font-family: var(--ui-font);
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text-main);
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: var(--btn-shadow);
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 4px 10px rgba(80, 50, 30, 0.12);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.btn.primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+
+.btn.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn.danger {
+  color: var(--danger);
+  border-color: var(--border-color);
+}
+
+.btn.danger:hover:not(:disabled) {
+  background: var(--accent-soft);
+  border-color: var(--danger);
+}
+
+.btn.small-btn {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+
+.btn.icon-only {
+  padding: 6px 10px;
+  min-width: 34px;
+}
+
+.btn[aria-pressed="true"] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   TOOLBAR
+   ========================================================================== */
+.toolbar {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btn-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border-color);
+  margin: 0 3px;
+}
+
+.font-control-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--paper-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 3px 6px;
+}
+
+.font-control-group .btn {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.font-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 42px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   FIND BAR
+   ========================================================================== */
+.find-bar {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.find-input-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.find-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+#findInput {
+  width: 100%;
+  padding: 8px 12px 8px 34px;
+  font-size: 0.92rem;
+  color: var(--text-main);
+  background: var(--paper-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  outline: none;
+}
+
+#findInput:focus {
+  border-color: var(--accent);
+}
+
+.find-count {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  min-width: 80px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   3. MAIN LAYOUT (2 Columns)
+   ========================================================================== */
+.main-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 350px;
+  gap: 14px;
+  align-items: stretch;
+}
+
+/* --------------------------------------------------------------------------
+   LEFT: DIARY EDITOR
+   -------------------------------------------------------------------------- */
+.editor-section {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 22px 22px;
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.dear-diary-heading {
+  margin: 0;
+  font-family: var(--diary-font);
+  font-style: italic;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.badge {
+  font-size: 0.78rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.badge.synced {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.badge.saving {
+  background: #fff3cd;
+  color: #856404;
+}
+
+/* Notebook Paper Styling */
+.notebook-container {
+  position: relative;
+  flex: 1;
+  min-height: 480px;
+  background: var(--paper-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(70, 50, 30, 0.04);
+}
+
+/* Classic notebook red margin rule */
+.notebook-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 48px;
+  width: 2px;
+  background: var(--margin-line);
+  opacity: 0.65;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Matching layers for smooth search highlighting */
+.layer {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0 24px 0 68px;
+  font-family: var(--diary-font);
+  font-size: var(--fs);
+  line-height: var(--lh);
+  letter-spacing: normal;
+  word-spacing: normal;
+  tab-size: 4;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: normal;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  border: none;
+}
+
+/* Ruling lines layer */
+.backdrop-layer {
+  color: transparent;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(var(--lh) - 1px),
+    var(--rule-color) calc(var(--lh) - 1px),
+    var(--rule-color) var(--lh)
+  );
+  background-attachment: local;
+}
+
+.backdrop-layer mark {
+  color: transparent;
+  background: var(--highlight-match);
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px var(--highlight-match);
+}
+
+.backdrop-layer mark.current-match {
+  background: var(--highlight-current);
+  box-shadow: 0 0 0 1px var(--highlight-current);
+}
+
+/* Editable textarea layer */
+.textarea-layer {
+  resize: none;
+  background: transparent;
+  color: var(--text-main);
+  caret-color: var(--accent);
+  outline: none;
+  z-index: 1;
+}
+
+.notebook-container:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* --------------------------------------------------------------------------
+   RIGHT: TO-DO LIST
+   -------------------------------------------------------------------------- */
+.todo-section {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 12px;
+}
+
+.todo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.todo-title {
+  margin: 0;
+  font-family: var(--diary-font);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* Task Input Form */
+.task-form {
+  display: flex;
+  gap: 8px;
+}
+
+#taskInput {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 12px;
+  font-size: 0.92rem;
+  color: var(--text-main);
+  background: var(--paper-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  outline: none;
+}
+
+#taskInput:focus {
+  border-color: var(--accent);
+}
+
+/* Task List */
+.task-list-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 240px;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--paper-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  user-select: none;
+}
+
+.task-item:hover {
+  border-color: var(--accent);
+  transform: translateX(2px);
+}
+
+.task-item.selected {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.task-checkbox-icon {
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.task-text {
+  flex: 1;
+  word-break: break-word;
+  font-size: 0.92rem;
+}
+
+.task-item.done .task-checkbox-icon {
+  color: var(--done-color);
+  font-weight: bold;
+}
+
+.task-item.done .task-text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.empty-state-msg {
+  margin: auto;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding: 24px 12px;
+}
+
+.todo-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.todo-actions .btn {
+  flex: 1;
+}
+
+.todo-instructions {
+  margin-top: 2px;
+}
+
+.help-text {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ==========================================================================
+   4. FOOTER (STATISTICS)
+   ========================================================================== */
+.app-footer {
+  padding: 12px 18px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 8px 4px;
+}
+
+.stat-card.highlight-stack {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.stat-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.stat-number {
+  font-family: var(--diary-font);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATION
+   ========================================================================== */
+.toast-popup {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 20px);
+  background: var(--text-main);
+  color: var(--card-bg);
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 1000;
+  max-width: 90vw;
+  text-align: center;
+}
+
+.toast-popup.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 900px) {
+  .main-layout {
+    grid-template-columns: 1fr; /* To-Do list moves below the diary editor */
+  }
+
+  .notebook-container {
+    min-height: 380px;
+  }
+
+  .app-footer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 10px 8px 24px;
+  }
+
+  .app-header {
+    padding: 14px 16px;
+  }
+
+  .brand-title {
+    font-size: 1.45rem;
+  }
+
+  .clock-display {
+    text-align: left;
+    width: 100%;
+  }
+
+  .toolbar {
+    padding: 8px 10px;
+    gap: 6px;
+  }
+
+  .divider {
+    display: none;
+  }
+
+  .layer {
+    padding-left: 54px;
+    padding-right: 16px;
+  }
+
+  .notebook-container::before {
+    left: 36px;
+  }
+
+  .find-bar {
+    flex-wrap: wrap;
+  }
+
+  .find-input-wrap {
+    flex-basis: 100%;
+  }
+
+  .find-count {
+    text-align: left;
+    flex: 1;
+  }
+
+  .app-footer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
