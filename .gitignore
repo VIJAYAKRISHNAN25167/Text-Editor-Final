@@ -29,3 +29,6 @@ desktop.ini
 
 # Logs
 *.log
+
+# Helper scripts
+push_to_github.bat
